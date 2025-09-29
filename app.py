@@ -7,7 +7,9 @@ clf = joblib.load("heart_model.pkl")
 scaler = joblib.load("scaler.pkl")
 
 st.title("🫀 Prediksi Penyakit Jantung")
-st.write("Model diload dari file `heart_model.pkl`")
+st.write("Model sudah dilatih dan dimuat dari file `heart_model.pkl`")
+
+st.header("Masukkan Data Pasien")
 
 # === Input User ===
 age = st.number_input("Usia", min_value=1, max_value=120, value=45)
@@ -34,7 +36,9 @@ user_input_scaled = scaler.transform(user_input)
 # Prediksi
 if st.button("🔍 Prediksi"):
     prediction = clf.predict(user_input_scaled)[0]
+    proba = clf.predict_proba(user_input_scaled)[0]
+
     if prediction == 1:
-        st.error("⚠️ Pasien Berisiko Mengidap Penyakit Jantung")
+        st.error(f"⚠️ Pasien berisiko penyakit jantung.\nProbabilitas: {proba[1]*100:.2f}%")
     else:
-        st.success("✅ Pasien Tidak Berisiko Penyakit Jantung")
+        st.success(f"✅ Pasien tidak berisiko penyakit jantung.\nProbabilitas: {proba[0]*100:.2f}%")
